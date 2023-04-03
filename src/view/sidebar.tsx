@@ -1,5 +1,11 @@
-import React from 'react';
-import { Button, Space } from 'antd';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
+import { Button, Col, Row, Space } from 'antd';
 import FlashChange from '@avinlab/react-flash-change';
 import times from 'lodash/times';
 import { CLUSTER } from '../globals/cluster';
@@ -10,6 +16,8 @@ import {
   RaftLogItem,
 } from '../raft/raft-interfaces';
 import cfg from '../globals/server-config';
+import { globalClockContext } from '../context';
+import { throttle } from 'lodash';
 
 const styles: any = {
   verticalText: {
@@ -248,6 +256,7 @@ export class Sidebar extends React.Component<SidebarProps, SidebarState> {
           >
             Turn OFF All Servers
           </Button>
+          <TimeControl />
         </Space>
 
         {/* Leader section */}
@@ -332,9 +341,18 @@ export class Sidebar extends React.Component<SidebarProps, SidebarState> {
             <tbody>
               {times(Math.max(logs.length, 10), (logIndex) => {
                 const logRow = logs[logIndex] || {};
+                const ackedServers = Object.values(logRow).filter(
+                  (log) => log?.value
+                ).length;
+                const isCommitted = ackedServers >= CLUSTER.servers.length / 2;
 
                 return (
-                  <tr key={`log-row-${logIndex}`}>
+                  <tr
+                    key={`log-row-${logIndex}`}
+                    style={{
+                      background: isCommitted && 'rgba(255,165,0,0.25)',
+                    }}
+                  >
                     <td style={{ textAlign: 'center' }}>{logIndex + 1}</td>
                     {CLUSTER.servers.map((server) => (
                       <td
@@ -364,3 +382,38 @@ export class Sidebar extends React.Component<SidebarProps, SidebarState> {
     );
   }
 }
+
+const TimeControl: React.FunctionComponent<{}> = () => {
+  const { timestamp, isPlaying, togglePlayState } = React.useContext(
+    globalClockContext
+  );
+
+  const handleSpaceKeyDown = useCallback((e: KeyboardEvent) => {
+    if (e.key === ' ') {
+      // e.preventDefault();
+      togglePlayState();
+    }
+  }, []);
+  useEffect(() => {
+    window.addEventListener('keydown', handleSpaceKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleSpaceKeyDown);
+    };
+  }, []);
+
+  return (
+    <Row align="middle" style={{ gap: '0.5rem' }}>
+      <Button
+        type="primary"
+        onClick={() => {
+          togglePlayState();
+        }}
+      >
+        {isPlaying ? '⏸️' : '▶️'}
+      </Button>
+      <Row>
+        System Running: <b>{(timestamp / 1000).toFixed(1)}s</b>
+      </Row>
+    </Row>
+  );
+};

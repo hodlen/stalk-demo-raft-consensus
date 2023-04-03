@@ -6,6 +6,7 @@ export interface RaftServerWorkerMessage {
 export enum RaftServerWorkerMessageType {
   LOADED = 'loaded', // worker -> ui
   INIT = 'init', // ui -> worker
+  SYNC_TIME = 'syncTime', // ui -> worker
   READY = 'ready', // worker -> ui
   STATE_UPDATE = 'stateUpdate', // worker -> ui
   MESSAGE_TO_PEER = 'messageToPeer', // worker -> ui

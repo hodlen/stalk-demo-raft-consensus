@@ -2,6 +2,7 @@ import React from 'react';
 import forEachRight from 'lodash/forEachRight';
 import { RaftServerEvents, RaftMessage } from '../raft/raft-interfaces';
 import { CLUSTER } from '../globals/cluster';
+import { globalClockContext } from '../context';
 
 const MESSAGE_DIAMETER = 16;
 
@@ -12,6 +13,9 @@ export class MessagingView extends React.Component<
   MessagingViewProps,
   MessagingViewState
 > {
+  static contextType = globalClockContext;
+  declare context: React.ContextType<typeof globalClockContext>;
+
   rAF: number;
   containerRef = React.createRef<HTMLDivElement>();
   serverCoordinates: {
@@ -36,6 +40,10 @@ export class MessagingView extends React.Component<
   constructor(props: MessagingViewProps) {
     super(props);
     this.state = {};
+  }
+
+  getTime() {
+    return this.context.timestamp;
   }
 
   componentDidMount() {
@@ -78,7 +86,7 @@ export class MessagingView extends React.Component<
   }
 
   onMessage(data: { message: RaftMessage; delay: number }) {
-    const now = Date.now();
+    const now = this.getTime();
 
     // Create an element
     const element = document.createElement('div');
@@ -127,7 +135,7 @@ export class MessagingView extends React.Component<
     const finishedMessageIndexes: number[] = [];
 
     this.messages.forEach((message, index) => {
-      const now = Date.now();
+      const now = this.getTime();
 
       if (now >= message.finishAt) {
         this.containerRef.current.removeChild(message.element);

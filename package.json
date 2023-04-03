@@ -24,6 +24,7 @@
     "@avinlab/react-flash-change": "^1.2.0",
     "@babel/runtime": "^7.14.0",
     "@opentelemetry/api": "^0.18.1",
+    "@opentelemetry/core": "0.19.0",
     "@opentelemetry/exporter-collector": "^0.19.0",
     "@opentelemetry/tracing": "^0.19.0",
     "@types/body-parser": "^1.19.0",
@@ -38,6 +39,7 @@
     "chance": "^1.1.7",
     "css-loader": "^5.2.4",
     "events": "^3.3.0",
+    "hox": "1",
     "html-webpack-plugin": "^5.3.1",
     "lodash": "^4.17.21",
     "prettier": "^2.0.4",
@@ -49,6 +51,5 @@
     "webpack": "^5.37.0",
     "webpack-cli": "^4.7.0",
     "webpack-dev-server": "^3.11.2"
-  },
-  "dependencies": {}
+  }
 }

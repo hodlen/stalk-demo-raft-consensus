@@ -132,8 +132,14 @@ export class ClusterView extends React.Component<
       >
         {/* Github Link */}
         <div className="github-link-container">
-          <a href="https://github.com/dgurkaynak/stalk-demo-raft-consensus/" target="_blank">
-            <span className="svg-container" dangerouslySetInnerHTML={{__html: GithubSvg}} />
+          <a
+            href="https://github.com/dgurkaynak/stalk-demo-raft-consensus/"
+            target="_blank"
+          >
+            <span
+              className="svg-container"
+              dangerouslySetInnerHTML={{ __html: GithubSvg }}
+            />
             GitHub
           </a>
         </div>
@@ -307,7 +313,7 @@ export class ClusterView extends React.Component<
           left: 0,
           right: 0,
           height: TOOLBAR_HEIGHT,
-          background: '#fff',
+          // background: '#fff',
           borderLeft: '1px solid rgb(240, 240, 240)',
           transform: shouldShow
             ? 'translateY(0)'

@@ -1,4 +1,5 @@
 import React from 'react';
+import { globalClockContext } from '../context';
 
 export interface ElectionProgressBarProps {
   style?: React.CSSProperties;
@@ -15,6 +16,8 @@ export class ElectionProgressBar extends React.Component<
   ElectionProgressBarProps,
   ElectionProgressBarState
 > {
+  static contextType = globalClockContext;
+  declare context: React.ContextType<typeof globalClockContext>;
   rAF: number;
 
   binded = {
@@ -33,7 +36,7 @@ export class ElectionProgressBar extends React.Component<
     const { timeoutSetAt, timeoutDuration } = this.props;
     let percent = 0;
     if (timeoutSetAt) {
-      percent = (Date.now() - timeoutSetAt) / timeoutDuration;
+      percent = (this.context.timestamp - timeoutSetAt) / timeoutDuration;
       percent = 1 - Math.min(percent, 1);
       percent = percent * 100;
     }

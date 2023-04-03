@@ -32,6 +32,26 @@ interface PeerRaftServer {
   heartbeatTimeoutId: number;
 }
 
+var timestamp = 0;
+var { setTimeout, clearTimeout } = (function () {
+  // maps timer id to trigger timestamp
+  return {
+    setTimeout: (fn: Function, delay: number) => {
+      const triggerTs = timestamp + delay;
+      const timerId = setInterval(() => {
+        if (timestamp >= triggerTs) {
+          fn();
+          clearInterval(timerId);
+        }
+      }, 10);
+      return timerId;
+    },
+    clearTimeout: (timerId: number) => {
+      clearInterval(timerId);
+    },
+  };
+})();
+
 // General variables
 let tracer: opentelemetry.Tracer;
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -744,6 +764,10 @@ self.addEventListener('message', (event) => {
     sendMessage({ type: RaftServerWorkerMessageType.READY });
   }
 
+  if (message.type == RaftServerWorkerMessageType.SYNC_TIME) {
+    timestamp = message.payload.timestamp;
+  }
+
   if (message.type == RaftServerWorkerMessageType.MESSAGE_FROM_PEER) {
     // Can be in 4 states
     clearTimeout(rpcTimeoutIds[message.payload.id]);
@@ -813,7 +837,7 @@ function logTerm(log: RaftLogItem[], index: number = log.length) {
 }
 
 function debug(message: string, ...args: any) {
-  // console.log(`[${id}] ${message}`, args);
+  console.log(`[${id}] ${message}`, args);
 }
 
 function setupTracing() {

@@ -29,7 +29,11 @@ export class RaftServer {
   log: RaftLogItem[] = [];
   peers: { [key: string]: PeerRaftServer } = {};
 
-  constructor(id: string, peerIds: string[]) {
+  constructor(
+    id: string,
+    peerIds: string[],
+    bindTimeSyncCb: (cb: (timestamp: number) => void) => void
+  ) {
     this.id = id;
 
     peerIds.forEach((peerId) => {
@@ -48,6 +52,12 @@ export class RaftServer {
 
     this.worker = new Worker(new URL('./server-worker.ts', import.meta.url));
     this.bindEvents();
+    bindTimeSyncCb((timestamp) => {
+      this.sendMessage({
+        type: RaftServerWorkerMessageType.SYNC_TIME,
+        payload: { timestamp },
+      });
+    });
   }
 
   private bindEvents() {

@@ -46,10 +46,21 @@ let peers: { [key: string]: PeerRaftServer } = {};
 
 // Internal state
 let id: string;
+let timestamp = 0;
 let commitIndex = 0;
 let rpcTimeoutIds: { [key: string]: number } = {};
 let rpcSpans: { [key: string]: opentelemetry.Span } = {};
 let electionTimeoutId: number;
+
+const setTimeout = (fn: Function, delay: number) => {
+  const triggerTs = timestamp + delay;
+  const timerId = setInterval(() => {
+    if (timestamp >= triggerTs) {
+      fn();
+      clearInterval(timerId);
+    }
+  }, 10);
+};
 
 function sendMessageToPeer(message: RaftMessage, timeout = 0) {
   const peer = peers[message.to];
@@ -744,6 +755,10 @@ self.addEventListener('message', (event) => {
     sendMessage({ type: RaftServerWorkerMessageType.READY });
   }
 
+  if (message.type == RaftServerWorkerMessageType.SYNC_TIME) {
+    timestamp = message.payload.timestamp;
+  }
+
   if (message.type == RaftServerWorkerMessageType.MESSAGE_FROM_PEER) {
     // Can be in 4 states
     clearTimeout(rpcTimeoutIds[message.payload.id]);
@@ -813,7 +828,7 @@ function logTerm(log: RaftLogItem[], index: number = log.length) {
 }
 
 function debug(message: string, ...args: any) {
-  // console.log(`[${id}] ${message}`, args);
+  console.log(`[${id}] ${message}`, args);
 }
 
 function setupTracing() {

@@ -7,6 +7,7 @@ const chance = new Chance();
 
 export interface RaftClusterOptions {
   numberOfServers: number;
+  bindTimeSyncCb: (cb: (timestamp: number) => void) => void;
 }
 
 export class RaftCluster {
@@ -22,7 +23,7 @@ export class RaftCluster {
 
     this.servers = times(options.numberOfServers, (i) => {
       const peerIds = names.filter((name) => name != names[i]);
-      return new RaftServer(names[i], peerIds);
+      return new RaftServer(names[i], peerIds, this.options.bindTimeSyncCb);
     });
   }
 }

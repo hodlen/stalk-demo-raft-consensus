@@ -1,32 +1,23 @@
 import { noop } from 'lodash';
 import React from 'react';
+import { GlobalClock, useGlobalClock } from '../globals/clock';
 
-type GlobalClockContext = {
-  timestamp: number;
-  forward: (ticks: number) => void;
-};
+type GlobalClockContext = GlobalClock;
 
 export const globalClockContext = React.createContext<GlobalClockContext>({
   timestamp: 0,
-  forward: noop,
+  isPlaying: true,
+  togglePlayState: noop,
+  registerSyncCb: noop,
 });
 
-export class GlobalClockProvider extends React.Component<
-  { children: React.ReactChild },
-  GlobalClockContext
-> {
-  state = {
-    timestamp: 0,
-    forward: (ticks: number) => {
-      this.setState((state) => ({ timestamp: state.timestamp + ticks }));
-    },
-  };
-
-  render() {
-    return (
-      <globalClockContext.Provider value={this.state}>
-        {this.props.children}
-      </globalClockContext.Provider>
-    );
-  }
-}
+export const GlobalClockProvider: React.FunctionComponent<{
+  children: React.ReactChild;
+}> = ({ children }) => {
+  const globalClock = useGlobalClock();
+  return (
+    <globalClockContext.Provider value={globalClock}>
+      {children}
+    </globalClockContext.Provider>
+  );
+};

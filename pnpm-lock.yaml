@@ -20,6 +20,7 @@ specifiers:
   chance: ^1.1.7
   css-loader: ^5.2.4
   events: ^3.3.0
+  hox: '1'
   html-webpack-plugin: ^5.3.1
   lodash: ^4.17.21
   prettier: ^2.0.4
@@ -52,6 +53,7 @@ devDependencies:
   chance: 1.1.7
   css-loader: 5.2.4_webpack@5.37.0
   events: 3.3.0
+  hox: 1.1.6_react@17.0.2
   html-webpack-plugin: 5.3.1_webpack@5.37.0
   lodash: 4.17.21
   prettier: 2.0.4
@@ -268,6 +270,13 @@ packages:
       '@types/node': 13.11.1
     dev: true
 
+  /@types/hoist-non-react-statics/3.3.1:
+    resolution: {integrity: sha512-iMIqiko6ooLrTh1joXodJK5X9xeEALT1kM5G3ZLhD3hszxBdIEd5C75U834D9mLcINgD4OyZf5uQXjkuYydWvA==}
+    dependencies:
+      '@types/react': 17.0.5
+      hoist-non-react-statics: 3.3.2
+    dev: true
+
   /@types/html-minifier-terser/5.1.1:
     resolution: {integrity: sha512-giAlZwstKbmvMk1OO7WXSj4OZ0keXAcl2TQq4LWHiiPH2ByaH7WeUzng+Qej8UPxxv+8lRTuouo0iaNDBuzIBA==}
     dev: true
@@ -294,6 +303,12 @@ packages:
 
   /@types/react-dom/17.0.5:
     resolution: {integrity: sha512-ikqukEhH4H9gr4iJCmQVNzTB307kROe3XFfHAOTxOXPOw7lAoEXnM5KWTkzeANGL5Ce6ABfiMl/zJBYNi7ObmQ==}
+    dependencies:
+      '@types/react': 17.0.5
+    dev: true
+
+  /@types/react-reconciler/0.26.7:
+    resolution: {integrity: sha512-mBDYl8x+oyPX/VBb3E638N0B7xG+SPk/EAMcVPeexqus/5aTpTphQi0curhhshOqRrc9t6OPoJfEUkbymse/lQ==}
     dependencies:
       '@types/react': 17.0.5
     dev: true
@@ -1792,6 +1807,17 @@ packages:
     resolution: {integrity: sha512-/gGivxi8JPKWNm/W0jSmzcMPpfpPLc3dY/6GxhX2hQ9iGj3aDfklV4ET7NjKpSinLpJ5vafa9iiGIEZg10SfBw==}
     dependencies:
       react-is: 16.13.1
+    dev: true
+
+  /hox/1.1.6_react@17.0.2:
+    resolution: {integrity: sha512-rAQgDVc+wbI+7Yo5cB/3wVBsL64dA5Aiz1izbtMBhFr6YJJX62euVC5wFfx0LpFP3Si7tcdDnXhjA7rSsWxOFQ==}
+    peerDependencies:
+      react: '>=16.8.0'
+    dependencies:
+      '@types/hoist-non-react-statics': 3.3.1
+      '@types/react-reconciler': 0.26.7
+      react: 17.0.2
+      react-reconciler: 0.26.2_react@17.0.2
     dev: true
 
   /hpack.js/2.1.6:
@@ -3477,6 +3503,18 @@ packages:
 
   /react-lifecycles-compat/3.0.4:
     resolution: {integrity: sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==}
+    dev: true
+
+  /react-reconciler/0.26.2_react@17.0.2:
+    resolution: {integrity: sha512-nK6kgY28HwrMNwDnMui3dvm3rCFjZrcGiuwLc5COUipBK5hWHLOxMJhSnSomirqWwjPBJKV1QcbkI0VJr7Gl1Q==}
+    engines: {node: '>=0.10.0'}
+    peerDependencies:
+      react: ^17.0.2
+    dependencies:
+      loose-envify: 1.4.0
+      object-assign: 4.1.1
+      react: 17.0.2
+      scheduler: 0.20.2
     dev: true
 
   /react/17.0.2:

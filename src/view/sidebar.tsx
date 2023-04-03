@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { Button, Col, Row, Space } from 'antd';
 import FlashChange from '@avinlab/react-flash-change';
 import times from 'lodash/times';
@@ -11,6 +17,7 @@ import {
 } from '../raft/raft-interfaces';
 import cfg from '../globals/server-config';
 import { globalClockContext } from '../context';
+import { throttle } from 'lodash';
 
 const styles: any = {
   verticalText: {
@@ -368,26 +375,16 @@ export class Sidebar extends React.Component<SidebarProps, SidebarState> {
 }
 
 const TimeControl: React.FunctionComponent<{}> = () => {
-  const clockContext = React.useContext(globalClockContext);
-  const currentTsRef = useRef<number>(Date.now());
-  const [isPlaying, setPlaying] = useState<boolean>(true);
-
-  useEffect(() => {
-    if (isPlaying) {
-      const now = Date.now();
-      const diff = now - currentTsRef.current;
-      currentTsRef.current = now;
-      clockContext.forward(diff);
-    }
-  });
+  const { timestamp, isPlaying, togglePlayState } = React.useContext(
+    globalClockContext
+  );
 
   const handleSpaceKeyDown = useCallback((e: KeyboardEvent) => {
     if (e.key === ' ') {
       e.preventDefault();
-      setPlaying((playing) => !playing);
+      togglePlayState();
     }
   }, []);
-
   useEffect(() => {
     window.addEventListener('keydown', handleSpaceKeyDown);
     return () => {
@@ -400,13 +397,13 @@ const TimeControl: React.FunctionComponent<{}> = () => {
       <Button
         type="primary"
         onClick={() => {
-          setPlaying(!isPlaying);
+          togglePlayState();
         }}
       >
         {isPlaying ? '⏸️' : '▶️'}
       </Button>
       <Row>
-        System Running: <b>{(clockContext.timestamp / 1000).toFixed(1)}s</b>
+        System Running: <b>{(timestamp / 1000).toFixed(1)}s</b>
       </Row>
     </Row>
   );

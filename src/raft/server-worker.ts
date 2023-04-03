@@ -32,6 +32,26 @@ interface PeerRaftServer {
   heartbeatTimeoutId: number;
 }
 
+var timestamp = 0;
+var { setTimeout, clearTimeout } = (function () {
+  // maps timer id to trigger timestamp
+  return {
+    setTimeout: (fn: Function, delay: number) => {
+      const triggerTs = timestamp + delay;
+      const timerId = setInterval(() => {
+        if (timestamp >= triggerTs) {
+          fn();
+          clearInterval(timerId);
+        }
+      }, 10);
+      return timerId;
+    },
+    clearTimeout: (timerId: number) => {
+      clearInterval(timerId);
+    },
+  };
+})();
+
 // General variables
 let tracer: opentelemetry.Tracer;
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -46,21 +66,10 @@ let peers: { [key: string]: PeerRaftServer } = {};
 
 // Internal state
 let id: string;
-let timestamp = 0;
 let commitIndex = 0;
 let rpcTimeoutIds: { [key: string]: number } = {};
 let rpcSpans: { [key: string]: opentelemetry.Span } = {};
 let electionTimeoutId: number;
-
-const setTimeout = (fn: Function, delay: number) => {
-  const triggerTs = timestamp + delay;
-  const timerId = setInterval(() => {
-    if (timestamp >= triggerTs) {
-      fn();
-      clearInterval(timerId);
-    }
-  }, 10);
-};
 
 function sendMessageToPeer(message: RaftMessage, timeout = 0) {
   const peer = peers[message.to];

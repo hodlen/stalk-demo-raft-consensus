@@ -5,6 +5,7 @@ specifiers:
   '@avinlab/react-flash-change': ^1.2.0
   '@babel/runtime': ^7.14.0
   '@opentelemetry/api': ^0.18.1
+  '@opentelemetry/core': 0.19.0
   '@opentelemetry/exporter-collector': ^0.19.0
   '@opentelemetry/tracing': ^0.19.0
   '@types/body-parser': ^1.19.0
@@ -36,6 +37,7 @@ devDependencies:
   '@avinlab/react-flash-change': 1.2.0_sfoxds7t5ydpegc3knd667wn6m
   '@babel/runtime': 7.14.0
   '@opentelemetry/api': 0.18.1
+  '@opentelemetry/core': 0.19.0_@opentelemetry+api@0.18.1
   '@opentelemetry/exporter-collector': 0.19.0_@opentelemetry+api@0.18.1
   '@opentelemetry/tracing': 0.19.0_@opentelemetry+api@0.18.1
   '@types/body-parser': 1.19.0

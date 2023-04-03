@@ -9,6 +9,7 @@ import FlashChange from '@avinlab/react-flash-change';
 import { RaftServer } from '../raft/server';
 import { RaftServerEvents, RaftServerState } from '../raft/raft-interfaces';
 import { ElectionProgressBar } from './election-progress-bar';
+import { globalClockContext } from '../context';
 
 export interface ServerViewProps {
   style?: React.CSSProperties;
@@ -30,6 +31,9 @@ export class ServerView extends React.Component<
   ServerViewProps,
   ServerViewState
 > {
+  static contextType = globalClockContext;
+  declare context: React.ContextType<typeof globalClockContext>;
+
   binded = {
     onElectionTimeoutUpdated: this.onElectionTimeoutUpdated.bind(this),
     onServerStateUpdated: this.onServerStateUpdated.bind(this),
@@ -150,7 +154,7 @@ export class ServerView extends React.Component<
 
   onElectionTimeoutUpdated(data?: { delay: number }) {
     this.setState({
-      electionTimeoutSetAt: data ? Date.now() : null,
+      electionTimeoutSetAt: data ? this.context.timestamp : null,
       electionTimeoutDuration: data?.delay ?? null,
     });
   }

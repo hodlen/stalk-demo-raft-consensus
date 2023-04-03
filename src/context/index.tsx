@@ -3,8 +3,7 @@ import React from 'react';
 
 type GlobalClockContext = {
   timestamp: number;
-  forward: (ms: number) => void;
-  // reset: () => void;
+  forward: (ticks: number) => void;
 };
 
 export const globalClockContext = React.createContext<GlobalClockContext>({
@@ -18,8 +17,8 @@ export class GlobalClockProvider extends React.Component<
 > {
   state = {
     timestamp: 0,
-    forward: (ms: number) => {
-      this.setState((state) => ({ timestamp: state.timestamp + ms }));
+    forward: (ticks: number) => {
+      this.setState((state) => ({ timestamp: state.timestamp + ticks }));
     },
   };
 

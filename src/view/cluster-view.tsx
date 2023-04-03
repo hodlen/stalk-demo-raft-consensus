@@ -313,7 +313,7 @@ export class ClusterView extends React.Component<
           left: 0,
           right: 0,
           height: TOOLBAR_HEIGHT,
-          background: '#fff',
+          // background: '#fff',
           borderLeft: '1px solid rgb(240, 240, 240)',
           transform: shouldShow
             ? 'translateY(0)'

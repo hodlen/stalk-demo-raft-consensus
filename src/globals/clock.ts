@@ -31,10 +31,16 @@ const useGlobalClockImpl = (): GlobalClock => {
     });
   });
 
+  const togglePlayState = useCallback(() => {
+    // resetting the currentTsRef to the current time
+    currentTsRef.current = Date.now();
+    setPlaying((playing) => !playing);
+  }, []);
+
   return {
     timestamp,
     isPlaying,
-    togglePlayState: () => setPlaying((playing) => !playing),
+    togglePlayState,
     registerSyncCb,
   };
 };

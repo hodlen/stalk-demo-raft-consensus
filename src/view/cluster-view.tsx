@@ -308,12 +308,8 @@ export class ClusterView extends React.Component<
     return (
       <div
         style={{
-          pointerEvents: 'none',
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
           height: TOOLBAR_HEIGHT,
+          width: '100%',
           // background: '#fff',
           borderLeft: '1px solid rgb(240, 240, 240)',
           transform: shouldShow

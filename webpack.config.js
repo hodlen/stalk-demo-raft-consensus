@@ -7,6 +7,7 @@ module.exports = [
     entry: './src/index.tsx',
     target: 'web',
     devtool: 'source-map',
+    mode: process.env.NODE_ENV || 'development',
     module: {
       rules: [
         {

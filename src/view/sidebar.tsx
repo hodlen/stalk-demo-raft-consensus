@@ -341,10 +341,21 @@ export class Sidebar extends React.Component<SidebarProps, SidebarState> {
             <tbody>
               {times(Math.max(logs.length, 10), (logIndex) => {
                 const logRow = logs[logIndex] || {};
-                const ackedServers = Object.values(logRow).filter(
-                  (log) => log?.value
-                ).length;
-                const isCommitted = ackedServers >= CLUSTER.servers.length / 2;
+                const valueConsensus = Object.values(logRow).reduce(
+                  (acc, log) => {
+                    if (!log) return acc;
+                    if (acc[log.value]) {
+                      acc[log.value] += 1;
+                    } else {
+                      acc[log.value] = 1;
+                    }
+                    return acc;
+                  },
+                  {} as { [key: string]: number }
+                );
+                const isCommitted = Object.values(valueConsensus).some(
+                  (count) => count >= CLUSTER.servers.length / 2
+                );
 
                 return (
                   <tr

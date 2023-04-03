@@ -308,6 +308,7 @@ export class ClusterView extends React.Component<
     return (
       <div
         style={{
+          pointerEvents: 'none',
           position: 'absolute',
           top: 0,
           left: 0,

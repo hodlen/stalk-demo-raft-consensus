@@ -341,9 +341,18 @@ export class Sidebar extends React.Component<SidebarProps, SidebarState> {
             <tbody>
               {times(Math.max(logs.length, 10), (logIndex) => {
                 const logRow = logs[logIndex] || {};
+                const ackedServers = Object.values(logRow).filter(
+                  (log) => log?.value
+                ).length;
+                const isCommitted = ackedServers >= CLUSTER.servers.length / 2;
 
                 return (
-                  <tr key={`log-row-${logIndex}`}>
+                  <tr
+                    key={`log-row-${logIndex}`}
+                    style={{
+                      background: isCommitted && 'rgba(255,165,0,0.25)',
+                    }}
+                  >
                     <td style={{ textAlign: 'center' }}>{logIndex + 1}</td>
                     {CLUSTER.servers.map((server) => (
                       <td
@@ -381,7 +390,7 @@ const TimeControl: React.FunctionComponent<{}> = () => {
 
   const handleSpaceKeyDown = useCallback((e: KeyboardEvent) => {
     if (e.key === ' ') {
-      e.preventDefault();
+      // e.preventDefault();
       togglePlayState();
     }
   }, []);
